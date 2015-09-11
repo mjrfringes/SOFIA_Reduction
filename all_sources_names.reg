@@ -1,0 +1,105 @@
+# Region file format: DS9 version 4.1
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+circle(344.02869,62.076121,3.072") # text={CepA.1}
+circle(344.01262,62.049456,9.2160001") # color=white text={CepA.2}
+circle(344.05817,62.038134,3.072") # text={CepA.3}
+ellipse(344.07913,62.031778,45.627206",28.424467",325) # color=white text={CepA.4}
+circle(344.0802,62.010256,9.2160001") # background text={CepA_bkgd}
+circle(346.44067,62.505957,3.072") # text={CepC.1}
+circle(346.4495,62.51072,3.072") # text={CepC.2}
+circle(346.41682,62.487843,3.072") # text={CepC.3}
+circle(346.45699,62.500216,9.2160001") # color=white text={CepC.4}
+circle(346.4089,62.502989,9.2096944") # background text={CepC_bkgd}
+circle(301.77752,27.47987,3.072") # color=red text={IRAS20050.1}
+circle(301.77579,27.480199,3.072") # color=red text={IRAS20050.2}
+circle(301.77633,27.48238,3.072") # color=red text={IRAS20050.3}
+circle(301.77441,27.483106,3.072") # color=red text={IRAS20050.4}
+circle(301.75905,27.507226,3.072") # text={IRAS20050.5}
+circle(301.78303,27.454384,3.072") # text={IRAS20050.6}
+circle(301.77746,27.481305,3.072") # color=red text={IRAS20050.7}
+ellipse(301.77718,27.481741,16.787906",12.259094",30) # color=cyan text={IRAS20050.8}
+circle(301.77001,27.461382,15.914352") # background text={IRAS20050_bkgd}
+circle(52.281972,31.365838,3.072") # text={NGC1333.1}
+circle(52.292875,31.365424,15.75803") # color=white text={NGC1333.2}
+circle(52.256301,31.339032,4.3252893") # text={NGC1333.3}
+circle(52.296422,31.308554,3.072") # text={NGC1333.4}
+circle(52.294326,31.305431,3.072") # text={NGC1333.5}
+circle(52.304081,31.303833,3.072") # text={NGC1333.6}
+circle(52.180693,31.292999,3.072") # text={NGC1333.7}
+circle(52.265407,31.267754,3.072") # text={NGC1333.8}
+circle(52.231633,31.24351,3.072") # text={NGC1333.9}
+circle(52.23925,31.237488,3.072") # text={NGC1333.10}
+circle(52.154613,31.22499,3.072") # text={NGC1333.11}
+circle(52.242064,31.371165,3.072") # text={NGC1333.12}
+circle(52.264576,31.25443,10.666667") # background text={NGC1333_bkgd}
+circle(100.26858,9.6056809,3.072") # text={NGC2264.1}
+circle(100.24633,9.5973728,3.072") # text={NGC2264.2}
+circle(100.27704,9.5983873,3.072") # text={NGC2264.3}
+circle(100.29144,9.5945833,3.072") # text={NGC2264.4}
+circle(100.2781,9.5794176,3.072") # text={NGC2264.5}
+circle(100.29974,9.592718,3.072") # text={NGC2264.6}
+circle(100.27377,9.5685846,3.072") # text={NGC2264.7}
+circle(100.27533,9.5690299,3.072") # text={NGC2264.8}
+circle(100.27397,9.5915978,3.072") # text={NGC2264.9}
+circle(100.28599,9.5950216,3.072") # text={NGC2264.10}
+circle(100.29716,9.4848931,3.072") # text={NGC2264.11}
+circle(100.31436,9.4884935,3.072") # text={NGC2264.12}
+circle(100.24643,9.556648,3.072") # text={NGC2264.13}
+circle(100.28719,9.4957925,3.072") # text={NGC2264.14}
+circle(100.29251,9.4925956,3.072") # text={NGC2264.15}
+circle(100.30277,9.4845964,3.072") # text={NGC2264.16}
+ellipse(100.26164,9.6040813,18.487783",16.707503",0) # color=white text={NGC2264.17}
+circle(100.27814,9.5587547,3.072") # text={NGC2264.18}
+circle(100.26771,9.5831432,3.072") # text={NGC2264.19}
+circle(100.25757,9.5760358,3.072") # text={NGC2264.20}
+circle(100.27638,9.5640029,3.072") # text={NGC2264.21}
+circle(100.28894,9.5071655,3.072") # text={NGC2264.22}
+circle(100.2981,9.5770824,15.854341") # background text={NGC2264_bkgd}
+circle(325.77663,66.115386,3.072") # color=white text={NGC7129.1}
+circle(325.75747,66.119079,9.2160001") # color=white text={NGC7129.2}
+ellipse(325.74875,66.103147,17.16431",22.14458",40) # color=white text={NGC7129.3}
+circle(325.70927,66.11004,9.2160001") # color=white text={NGC7129.4}
+circle(325.77889,66.111695,3.072") # text={NGC7129.5}
+circle(325.80111,66.108648,12.288") # background text={NGC7129_bkgd}
+circle(246.79276,-24.320242,3.072") # text={Oph.1}
+circle(246.68405,-24.58005,3.072") # text={Oph.2}
+circle(246.78931,-24.621749,3.072") # text={Oph.3}
+ellipse(246.74697,-24.584381,14.913225",10.678006",30) # color=white text={Oph.4}
+ellipse(246.76021,-24.624333,10.824574",8.2143328",10) # color=white text={Oph.5}
+circle(246.77825,-24.637615,3.072") # text={Oph.6}
+circle(246.81534,-24.646048,3.072") # text={Oph.7}
+circle(246.86663,-24.659398,3.072") # text={Oph.8}
+circle(246.90496,-24.509678,3.072") # text={Oph.9}
+circle(246.84073,-24.498241,3.072") # text={Oph.10}
+circle(246.82305,-24.481945,3.072") # text={Oph.11}
+ellipse(246.74656,-24.583394,20.7784",18.1938",30) # color=white text={Oph.12}
+ellipse(246.64154,-24.394644,36.29422",16.56788",30) # color=white text={Oph.13}
+circle(246.87562,-24.462017,3.072") # text={Oph.14}
+circle(246.86831,-24.455849,3.072") # text={Oph.15}
+circle(246.87266,-24.654617,3.072") # text={Oph.16}
+circle(246.6003,-24.413428,3.072") # text={Oph.17}
+circle(246.59837,-24.410949,3.072") # text={Oph.18}
+circle(246.57173,-24.39585,3.072") # text={Oph.19}
+circle(246.62708,-24.383295,3.072") # text={Oph.20}
+circle(246.81532,-24.629717,12.288") # background text={Oph_bkgd}
+circle(334.88618,63.323456,3.072") # text={S140.1}
+circle(334.83689,63.308009,3.072") # text={S140.2}
+circle(334.83234,63.313779,3.072") # color=red text={S140.3}
+circle(334.82578,63.31776,3.072") # color=red text={S140.4}
+circle(334.82557,63.313065,7.8888451") # color=white text={S140.5}
+circle(334.8435,63.30126,3.072") # text={S140.6}
+circle(334.81105,63.316662,3.072") # text={S140.7}
+ellipse(334.82654,63.313836,23.830238",18.909383",90) # color=cyan text={S140.8}
+circle(334.86058,63.317754,9.5002665") # background text={S140_bkgd}
+circle(0.99921118,68.584948,3.072") # text={S171.1}
+circle(1.0081815,68.575909,3.072") # text={S171.2}
+circle(1.0497966,68.577906,13.750029") # background text={S171_bkgd}
+circle(86.769935,0.36197272,3.072") # text={NGC2071.1}
+circle(86.76941,0.36338917,3.072") # text={NGC2071.2}
+circle(86.772367,0.36396711,3.072") # text={NGC2071.3}
+circle(86.766732,0.36958191,3.072") # text={NGC2071.4}
+circle(86.794539,0.35388063,3.072") # text={NGC2071.5}
+ellipse(86.782492,0.30048554,37.768711",32.607478",90) # color=white text={NGC2071.6}
+ellipse(86.770544,0.36287845,16.170324",11.381929",340) # color=cyan text={NGC2071.7}
+circle(86.772893,0.34747548,16") # background text={NGC2071_bkgd}
