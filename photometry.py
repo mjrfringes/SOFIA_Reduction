@@ -1433,7 +1433,7 @@ def addFitResults(sourcetable,folder_export=""):
 
 	return newtable
 
-def do_IRAC_phot(table,cluster,r_out=4,r_annulus=6,IRAC_IMG_FOLDER = '/cardini3/mrizzo/2012SOFIA/Spitzer_Mosaics/'):
+def do_IRAC_phot(table,cluster,r_out=4,r_annulus=8,IRAC_IMG_FOLDER = '/cardini3/mrizzo/2012SOFIA/Spitzer_Mosaics/'):
 	'''
 	This replaces the IRAC photometry from the sources from 'cluster' in 'sourcetable', and does the photometry manually
 	IRAC images need to be present and contain the cluster name and the string 'IRAC.X', where X is the band.
@@ -1521,7 +1521,7 @@ def do_manual_2mass_phot(table):
 	Jlim = 0.0007
 	Hlim = 0.0009
 	Klim = 0.0015
-	limits = Table(np.array([Jlim,Hlim,Klim]),names=('j','h','k'))
+	limits = Table(np.array([Jlim,Hlim,Klim]),names=('j','h','ks'))
 
 	# read input cluster
 	for i in range(len(sourcetable)):
@@ -1531,8 +1531,9 @@ def do_manual_2mass_phot(table):
 
 			# source number 2 has no matching believable flux in 2MASS
 			# source 4 likely has no believable flux either
-			if "2" or "4" in sourcetable['SOFIA_name'][i]:
-				for band in ['j','h','k']:
+			if  sourcetable['SOFIA_name'][i].split('.')[-1] in ["2", "4"]:
+				print sourcetable['SOFIA_name'][i].split('.')[-1]
+				for band in ['j','h','ks']:
 					sourcetable[band][i] = limits[band];sourcetable.mask[band][i] = False
 					sourcetable['e_'+band][i] = limits[band];sourcetable.mask['e_'+band][i] = False
 					sourcetable['flag_'+band][i] = 'U';sourcetable.mask['flag_'+band][i] = False
@@ -1805,16 +1806,16 @@ def plotsedfit(input_fits, output_ax, select_format=("N", 1), plot_max=None,
 	    # plotting in dedicated directory; thick line for the best fit, and gray lines for the other fits
             if (plot_mode == 'A' and i == 0) or plot_mode == 'I':
 
-                    if show_sed:
+                   if show_sed:
                         ax.add_collection(LineCollection(lines, colors=colors))
 
-                    if show_convolved:
+                   if show_convolved:
                         for j in range(len(conv)):
                             ax.plot(wav, conv[j], color=colors[j], linestyle='solid', marker='o', markerfacecolor='none', markeredgecolor=colors[j])
 
                    if plot_mode == 'A':
                         ax = plot_source_info(ax, 0, info, plot_name, plot_info)
-                    else:
+                   else:
                         ax = plot_source_info(ax, i, info, plot_name, plot_info)
 
     # close file and end script
@@ -1970,7 +1971,7 @@ def newimgcutouts(ax,source,n,sizeasec=10,folder="/cardini3/mrizzo/2012SOFIA/Spi
 	# the following overplots a circle at the location of another data catalog RA and DEC for that same source
 	# this helps us know if the emission is not colocated
 	if n==5:
-		namelist=['allwise','megeath','c2d','guth','iras','akari','akariyso','enoch06','enoch08','van_Kempen','2mass]
+		namelist=['allwise','megeath','c2d','guth','iras','akari','akariyso','enoch06','enoch08','van_Kempen','2mass']
 		colorlist=[colors[2],colors[1],colors[1],colors[1],colors[4],colors[5],colors[5],colors[6],colors[6],colors[8],colors[0]]
 
 		# loop on each catalog

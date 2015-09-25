@@ -108,10 +108,16 @@ pickle.dump(newsourcelist,open(folder_export+"newsourcelist.data","wb"))
 # Write a file with only the fluxes
 newsourcelist[metalist+columnlist+errorbars].write(folder_export+"newTableReduced.txt",format='ascii.fixed_width')
 
+#####################################################################################################################################
+
+print '### STEP 8.5: DO IRAC20050 PHOTOMETRY ###'
+# scripts outputs newtable.data
+os.system("/cardini3/mrizzo/anaconda/bin/python IRAS20050.py")
+
 ######################################################################################################################################
 
 print '### STEP 9: CALCULATE SPECTRAL INDICES ###'
-totsourcetable = pickle.load(open(folder_export+"newsourcelist.data","r"))
+totsourcetable = pickle.load(open(folder_export+"newtable.data","r"))
 newsourcelist = totsourcetable.copy()
 
 # adjusts error bars determination to determine the spectral index (otherwise the Spitzer fluxes constrain the fits too much)

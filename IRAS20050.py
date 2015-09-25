@@ -42,5 +42,8 @@ for col in columnlist+errorlist:
 newtable = p.do_manual_2mass_phot(newIRACphot)
 
 # print
-newtable[metalist+columnlist+errorlist+flaglist].more()
+#newtable[metalist+columnlist+errorlist+flaglist].more()
+
+# save
+pickle.dump(newtable,open(folder_export+"newtable.data","wb"))
 
