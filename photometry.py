@@ -946,7 +946,7 @@ def newPhot(sourcetable, \
 				
 
 					# this is the adopted error on each flux estimate, mostly due to observatory variations; 15% error plus whatever local error there is
-					t["e_F"+str(wl)] = np.sqrt(1./(tot_weight+1./(0.15*t["F"+str(wl)][0])**2))
+					t["e_F"+str(wl)] = np.sqrt(1./(tot_weight)+(0.15*t["F"+str(wl)][0])**2)
 					t["e_F"+str(wl)].format = "4.3f"
 
 					# few more checks to make sure we get valid data
@@ -1124,7 +1124,7 @@ def mag2flux(allNewPhot,fname,newfname,refname):
 		allNewPhot['flag_'+newfname][allNewPhot.mask[errorname]] = 'U'
 
 		# rename column
-		allNewPhot['e_'+newfname] =  allNewPhot[errorname]
+		allNewPhot['e_'+newfname] =  allNewPhot[newfname] * allNewPhot[errorname]
 		#print allNewPhot
 	else:
 
@@ -1199,24 +1199,24 @@ def convert_table(table):
 			if allNewPhot.mask[val][i] == True:
 				### if the gutermuth values are unmasked, use them!
 				if allNewPhot.mask[val+'_guth'][i] == False: 
-					print 'replaced',allNewPhot[val][i],allNewPhot.mask[val][i],' by ',allNewPhot[val+'_guth'][i],allNewPhot.mask[val+'_guth'][i]
+					#print 'replaced',allNewPhot[val][i],allNewPhot.mask[val][i],' by ',allNewPhot[val+'_guth'][i],allNewPhot.mask[val+'_guth'][i]
 					allNewPhot[val][i] = allNewPhot[val+'_guth'][i]
 					allNewPhot['e_'+val][i] = allNewPhot['e_'+val+'_guth'][i]
 				elif allNewPhot.mask[val+'_megeath'][i] == False: 
-					print 'replaced',allNewPhot[val][i],allNewPhot.mask[val][i],' by ',allNewPhot[val+'_megeath'][i],allNewPhot.mask[val+'_megeath'][i]
+					#print 'replaced',allNewPhot[val][i],allNewPhot.mask[val][i],' by ',allNewPhot[val+'_megeath'][i],allNewPhot.mask[val+'_megeath'][i]
 					allNewPhot[val][i] = allNewPhot[val+'_megeath'][i]
 					allNewPhot['e_'+val][i] = allNewPhot['e_'+val+'_megeath'][i]
 		for val in ['m2']:			
 			if allNewPhot.mask[val][i] == True:
 				### if the gutermuth values are unmasked, use them!
 				if allNewPhot.mask['S70'][i] == False: 
-					print 'replaced',allNewPhot[val][i],allNewPhot.mask[val][i],' by ',allNewPhot['S70'][i],allNewPhot.mask['S70'][i]
+					#print 'replaced',allNewPhot[val][i],allNewPhot.mask[val][i],' by ',allNewPhot['S70'][i],allNewPhot.mask['S70'][i]
 					allNewPhot[val][i] = allNewPhot['S70'][i]
 					allNewPhot['e_'+val][i] = allNewPhot['e_S70'][i]
 		for val in ['Fp']:			
 			if allNewPhot.mask[val][i] == True:
 				if allNewPhot.mask['Sp'][i] == False: 
-					print 'replaced',allNewPhot[val][i],allNewPhot.mask[val][i],' by ',allNewPhot['Sp'][i],allNewPhot.mask['Sp'][i]
+					#print 'replaced',allNewPhot[val][i],allNewPhot.mask[val][i],' by ',allNewPhot['Sp'][i],allNewPhot.mask['Sp'][i]
 					allNewPhot[val][i] = allNewPhot['Sp'][i]
 					allNewPhot['e_'+val][i] = allNewPhot['e_Sp'][i]
 
@@ -1526,20 +1526,23 @@ def do_manual_2mass_phot(table):
 	# read input cluster
 	for i in range(len(sourcetable)):
 		
-		# test on the cluster
-		if sourcetable['Cluster'][i] == 'IRAS20050':
+		for band in ['j','h','ks']:
+			if sourcetable[band][i] < limits[band] and ~sourcetable.mask[band][i]:
+				sourcetable[band][i] = limits[band]
+				sourcetable['e_'+band][i] = limits[band]
+				sourcetable['flag_'+band][i] = 'U'
+		
+				# test on the cluster
+				if sourcetable['Cluster'][i] == 'IRAS20050':
 
-			# source number 2 has no matching believable flux in 2MASS
-			# source 4 likely has no believable flux either
-			if  sourcetable['SOFIA_name'][i].split('.')[-1] in ["2", "4"]:
-				print sourcetable['SOFIA_name'][i].split('.')[-1]
-				for band in ['j','h','ks']:
-					sourcetable[band][i] = limits[band];sourcetable.mask[band][i] = False
-					sourcetable['e_'+band][i] = limits[band];sourcetable.mask['e_'+band][i] = False
-					sourcetable['flag_'+band][i] = 'U';sourcetable.mask['flag_'+band][i] = False
+					# source number 2 has no matching believable flux in 2MASS
+					# source 4 likely has no believable flux either
+					if  sourcetable['SOFIA_name'][i].split('.')[-1] in ["2", "4"]:
+							sourcetable.mask[band][i] = False
+							sourcetable.mask['e_'+band][i] = False
+							sourcetable.mask['flag_'+band][i] = False
 
 	return sourcetable
-
 
 def nptable(sourcetable,columnlist=None,minmask = None):
 	'''
@@ -1641,7 +1644,7 @@ def plot_source_info(ax, i, info, plot_name, plot_info):
 def plotsedfit(input_fits, output_ax, select_format=("N", 1), plot_max=None,
          plot_mode="A", sed_type="interp", show_sed=True, show_convolved=False,
          x_mode='A', y_mode='A', x_range=(1., 1.), y_range=(1., 2.),
-         plot_name=False, plot_info=True, format='pdf', sources=None, memmap=True,av=None):
+         plot_name=False, plot_info=True, format='pdf', sources=None, memmap=True,av=None,lw=2):
     """
     Make SED plots on top of already existing axes
     Modified from original plot.py in sedfitter module
@@ -1807,7 +1810,7 @@ def plotsedfit(input_fits, output_ax, select_format=("N", 1), plot_max=None,
             if (plot_mode == 'A' and i == 0) or plot_mode == 'I':
 
                    if show_sed:
-                        ax.add_collection(LineCollection(lines, colors=colors))
+                        ax.add_collection(LineCollection(lines, colors=colors, linewidth=lw))
 
                    if show_convolved:
                         for j in range(len(conv)):
@@ -1886,7 +1889,7 @@ def get_img_cal(flight_ID,size,folder_export="/n/a2/mrizzo/Dropbox/SOFIA/Process
 	return image
 
 # this picks the color palette
-colors = sns.color_palette('hls',9)
+colors = sns.color_palette('husl',9)
 
 def newimgcutouts(ax,source,n,sizeasec=10,folder="/cardini3/mrizzo/2012SOFIA/Spitzer_Mosaics/" ):
 	'''
@@ -2018,7 +2021,7 @@ class plots(object):
 		self.label = label
 
 
-def plotData(ax,sourcetable,plots,alpha):
+def plotData(ax,sourcetable,plots,alpha,msize=10):
 	'''
 	plots a set of points with errorbars
 	'''
@@ -2029,7 +2032,7 @@ def plotData(ax,sourcetable,plots,alpha):
 	color = plots.color
 	label = plots.label
 	ax.errorbar(wllist,nptable(sourcetable[columnlist][0])*1e-17*const.c.value/wllist,nptable(sourcetable[errorlist][0])*1e-17*const.c.value/wllist, 
-		c=color,alpha=alpha,linestyle="None",marker=marker,label = label,markersize=10)
+		c=color,alpha=alpha,linestyle="None",marker=marker,label = label,markersize=msize)
 
 
 
@@ -2193,4 +2196,182 @@ def markerPlotSED(sourcetable,error=None,show=True,alpha=0.8,folder_export="",\
 				
 				fig.savefig(folder_export+sourceID+'.png',dpi=200)
 				plt.close(fig)
+
+
+def markerPlotSEDax(ax,sourcetable,error=None,show=True,alpha=0.8,folder_export="",\
+		linestyle='None',RAstr="RA_ave",DECstr="DEC_ave",cluster=None,show_axes=[]):
+	'''
+	this function creates images with SED plots, SED fit results into a external 'axis'
+	'''
+	
+	# the following block sets the marker, colors, labels, and selects which
+	# column of the sourcetable corresponds to which color/marker/labels
+	markers = ['v','p','D','^','h','o','*','>','<']
+	TwoMASS = plots(['j','h','ks'],[1.3,1.6,2.2],sns.xkcd_rgb['pale red'],markers[0],'2MASS')
+	Spitzer = plots(['i1','i2','i3','i4','m1','m2'],[3.6,4.5,5.8,8.,24,70],sns.xkcd_rgb['medium green'],markers[1],'Spitzer')
+	WISE = plots(['w1','w2','w3','w4'],[3.4,4.6,12,22],colors[2],markers[2],'WISE')
+	SOFIA = plots(['F11','F19','F31','F37'],[11.1,19.7,31.5,37.1],sns.xkcd_rgb['denim blue'],markers[3],'SOFIA')
+	IRAS = plots(['Fnu_12','Fnu_25','Fnu_60','Fnu_100'],[12,25,60,100],colors[4],markers[4],'IRAS')
+	AKARI = plots(['S65','S90','S140','S160'],[65,90,140,160],colors[5],markers[5],'AKARI')
+	ENOCH = plots(['Fp'],[1300],colors[6],markers[6],'ENOCH')
+	HERSCHEL = plots(['H70','H160','H250','H350','H500'],[70,160,250,350,500],colors[7],markers[7],'HERSCHEL')
+	SCUBA = plots(['S450','S850','S1300'],[450,850,1300],colors[8],markers[8],'SCUBA')
+	fluxlist = [TwoMASS,Spitzer,SOFIA]
+	fluxnames = [p.bands for p in fluxlist]
+	
+#	# loop on all the sources in sourcetable
+#	sources = sourcetable.group_by('SOFIA_name')
+#	for key,sourcetable in zip(sources.groups.keys,sources.groups):
+
+#		# enable the user to just plot the SEDs from one given cluster
+#		if cluster==None or sourcetable['Cluster'][0]==cluster:
+
+	# pick the source name, RA and DEC
+	sourceID = sourcetable['SOFIA_name'][0] 
+	RA = sourcetable[RAstr][0]
+	DEC = sourcetable[DECstr][0]
+	
+	# clean up existing png file (i don't think this step is necessary)
+	#os.system('rm %s' %(folder_export+sourceID+'.png'))
+
+	# create a numpy masked table with the fluxes
+	ntable=nptable(sourcetable[[col for p in fluxlist for col in p.bands]][0])
+
+	# counts the number of unmasked fluxes
+	count=np.ma.count(nptable(sourcetable[[col for p in [TwoMASS,Spitzer,WISE,SOFIA] for col in p.bands]][0]))
+
+	# this is the name of the file containing the fits results
+	fname = folder_export+"plot_"+sourcetable['Cluster'][0]+'/'+sourceID+'.tab'
+
+	# nonzero number of unmasked data points? worth it!
+	if count:
+		print "Generating plot for "+sourcetable['SOFIA_name'][0]
+		# Plot the fit results and display some fits parameters
+		data_list = []
+
+		# only look for the fits for isolated and clustered sources were computed in the first place
+		if (sourcetable['Property'][0] == 'Isolated' or sourcetable['Property'][0] == "Clustered") and count>2 and os.path.isfile(fname):
+			SEDfolder = '/cardini3/mrizzo/2012SOFIA/SED_Models/'
+			model_dir = SEDfolder+'models_r06/seds/'
+
+			# plot the results of all fits for that source, that match the criterion 'select_format
+			filename = SEDfolder+'output_'+sourcetable['Cluster'][0]+'.fitinfo'
+			plotsedfit(filename,ax,select_format=('N',10.),sources=[sourceID],plot_info=False,lw=3)
+
+#					# load the fits result datafiles (created by sedfitter and related functions in sedfits.py)
+#					fitparams = pickle.load(open(fname,'r'))
+#					fitparams_min = pickle.load(open(folder_export+"plot_"+sourcetable['Cluster'][0]+'/'+sourceID+'_min.tab','r'))
+#					fitparams_max = pickle.load(open(folder_export+"plot_"+sourcetable['Cluster'][0]+'/'+sourceID+'_max.tab','r'))
+
+#					# This forms the list of all fit parameters and values from the fitter
+# 					data_list = [nametable[col][0]+": "+str(fitparams_min[col][0])+", "+str(fitparams[col][0])+", " \
+#						+str(fitparams_max[col][0]) for col in fitparams.columns[2:]] 
+
+#					# add composite values
+#					solar_lum = 3.846e26 # W		
+#					solar_radius = 6.955e8 # m
+#					solar_mass = 1.98e30 # kg
+#					year = 3.15569e7 # s
+#					Rstar = fitparams['rstar'][0]*solar_radius
+#					Tstar = fitparams['tstar'][0]
+#					Mdotdisk= fitparams['mdotdisk'][0] * solar_mass / year
+#					Mstar = fitparams['massc'][0] * solar_mass
+#					L_star = 4*np.pi*constants.sigma_sb.value*Rstar**2*Tstar**4/solar_lum
+#					L_acc_disk = constants.G.value*Mdotdisk*Mstar/Rstar/solar_lum
+#					data_list.append(r'$L_\star$ = %.2e'  %(L_star))
+#					data_list.append(r'$L_{disk}$ = %.2e' % (L_acc_disk))
+#					data_list.append(r'$L_{tot}$ = %.2e' % (L_acc_disk+L_star))
+
+#				# also add the R50 ratios to grasp whether some sources are extended or not
+#				data_list.append(r"$R_{50}^{19}$ = %.2f $R_{cal}^{19}$ " % (sourcetable['R50_19'][0]/sourcetable['R50_cal_19'][0]))
+#				data_list.append(r"$R_{50}^{31}$ = %.2f $R_{cal}^{31}$ " %(sourcetable['R50_31'][0]/sourcetable['R50_cal_31'][0]))
+#				data_list.append(r"$R_{50}^{37}$ = %.2f $R_{cal}^{37}$ " %(sourcetable['R50_37'][0]/sourcetable['R50_cal_37'][0]))
+		
+		# join the string
+#				data_string = "\n".join(data_list)
+
+		# display all those parameters to the right of the main SED
+#				fig.text(0.78,0.95,data_string,ha='left',va='top',size=6)
+
+		# plot all mission data in different color and marker; convert values to lambdaFlambda units
+		for p in fluxlist:
+			plotData(ax,sourcetable,p,alpha,msize=15)
+
+		# put the legend on the bottom right
+		#ax.legend(loc=4,fontsize='small')
+
+		# log axes
+		ax.set_xscale('log')
+		ax.set_yscale('log')
+
+		# axes limits
+		ax.set_xlim([1,300])
+		ax.set_ylim([3e-13,0.3e-7])
+		#ax.set_xticks([1,5,10,20,30,40,70,100,300])
+
+		# necessary to not have log notation
+		ax.xaxis.set_major_formatter(ScalarFormatter())
+
+		# labels
+		[showx,showy,top,right] = show_axes
+		ax.get_yaxis().set_tick_params(which='both',direction='in')
+		ax.get_xaxis().set_tick_params(which='both',direction='in')
+		if showx: ax.set_xlabel(r'Wavelength ($\mu$m)')
+		else:
+			xticklabels = ax.get_xticklabels()
+			plt.setp(xticklabels,visible=False)
+		if top:
+			#ax.xaxis.tick_top()
+			ax.xaxis.set_tick_params(labeltop='on')
+			ax.xaxis.set_label_position('top')
+		else:
+			ax.xaxis.set_label_position('bottom')
+		if showy:
+			ax.set_ylabel(r'$\lambda F_\lambda$ (ergs.cm$^{-2}$.s$^{-1}$)')
+		else:
+			yticklabels = ax.get_yticklabels()
+			plt.setp(yticklabels,visible=False)
+		if right:
+			#ax.yaxis.tick_right()
+			ax.yaxis.set_label_position('right')
+			
+
+#				# load up the 6 image cutouts underneath the main SED
+#				for j in range(7):
+#					# creates the axes for the cutout images					
+#					newax = fig.add_axes([0.02+j*0.13,0.04,0.14,0.14])
+
+#					# function newimgcutouts looks into all the FITS files for a match in RA and DEC
+#					# returns the sub image cutout around the source
+#					subimg,axval = newimgcutouts(newax,sourcetable,j+1)
+
+#					# function "label" determines the label of each cutout (e.g. "SOFIA 19um")
+#					label = newdet_label(j+1)	
+#		
+#					# set label fontsize
+#					newax.set_xlabel(label,fontsize=9)
+
+#					# no ticks
+#					newax.set_xticks([])
+#					newax.set_yticks([])
+
+#				# write the size of the cutout in arcsec
+#				straxval = "%.1f asec" % axval
+
+#				# add vertical text next to the last cutout
+#				newax.text(1,0.5,straxval,
+#					horizontalalignment = 'left',
+#					verticalalignment = 'center',
+#					rotation = -90,
+#					transform = newax.transAxes,fontsize=9)
+
+		# show title
+		#ax.set_title(sourceID)
+		
+		# show and hold (if show==True), otherwise just save to png with high dpi
+		if show: plt.show()
+		
+#				fig.savefig(folder_export+sourceID+'.png',dpi=200)
+#				plt.close(fig)
+
 
