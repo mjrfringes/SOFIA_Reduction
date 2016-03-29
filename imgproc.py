@@ -10,7 +10,7 @@ from astropy import wcs
 from scipy.special import hyp2f1
 from mmm import mmm
 # Photutils imports
-from photutils import detect_sources, segment_properties, aperture_photometry, remove_segments
+from photutils import detect_sources, aperture_photometry
 from photutils import CircularAperture, EllipticalAperture
 from photutils import SkyCircularAperture, SkyEllipticalAperture
 from photutils import CircularAnnulus, EllipticalAnnulus
